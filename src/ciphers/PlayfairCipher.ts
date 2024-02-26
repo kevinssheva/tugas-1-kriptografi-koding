@@ -28,7 +28,7 @@ class PlayfairCipher {
         }
       }
     }
-    console.log(matrix);
+    
     return matrix;
   }
 

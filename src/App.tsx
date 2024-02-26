@@ -4,6 +4,7 @@ import Affine from "./components/Affine";
 import Vigenere from "./components/Vigenere";
 import Playfair from "./components/Playfair";
 import ProductVT from "./components/ProductVT";
+import AutoVigenere from "./components/AutoVigenere";
 
 const Page = () => {
   const [input, setInput] = useState("");
@@ -22,13 +23,30 @@ const Page = () => {
         return <Playfair input={input} inputKey={key} />;
       case "Product":
         return <ProductVT input={input} inputKey={key} />;
+      case "Auto Vigenere":
+        return <AutoVigenere input={input} inputKey={key} />;
       default:
         return null;
     }
   };
 
-  const cipherType = ["Affine", "Vigenere", "Extended Vigenere", "Playfair", "Product"];
-  const keyCipher = ["Vigenere", "Extended Vigenere", "Playfair", "Product"];
+  const cipherType = [
+    "Affine",
+    "Vigenere",
+    "Extended Vigenere",
+    "Auto Vigenere",
+    "Playfair",
+    "Product",
+  ];
+
+  const keyCipher = [
+    "Vigenere",
+    "Extended Vigenere",
+    "Auto Vigenere",
+    "Playfair",
+    "Product",
+  ];
+
   return (
     <div className="w-full h-screen bg-purple-400 flex items-center justify-center">
       <div className="mr-7 flex w-full max-w-[43rem] justify-start items-start">

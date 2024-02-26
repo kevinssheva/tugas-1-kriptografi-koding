@@ -15,8 +15,6 @@ const Playfair = ({ input, inputKey }: { input: string; inputKey: string }) => {
     }
   };
 
-  console.log(result, inputKey, input, isEncrypt);
-
   return (
     <div className="w-full h-full">
       <div className="flex justify-between items-center">

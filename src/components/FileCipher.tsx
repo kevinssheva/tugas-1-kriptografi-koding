@@ -2,14 +2,32 @@ import { useState } from "react";
 import PlayfairCipher from "../ciphers/PlayfairCipher";
 import { FaPlus } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
-import { encrypt as encryptAffine } from "../ciphers/AffineCipher";
-import { encrypt as encryptVigenere } from "../ciphers/VigenereCipher";
-import { encrypt as encryptExtended } from "../ciphers/ExtendedVigenereCipher";
-import { encrypt as encryptAuto } from "../ciphers/AutoVigenereCipher";
-import { productCipherEncrypt } from "../ciphers/ProductCipher";
+import {
+  encrypt as encryptAffine,
+  decrypt as decryptAffine,
+} from "../ciphers/AffineCipher";
+import {
+  encrypt as encryptVigenere,
+  decrypt as decryptVigenere,
+} from "../ciphers/VigenereCipher";
+import {
+  encrypt as encryptExtended,
+  decrypt as decryptExtended,
+} from "../ciphers/ExtendedVigenereCipher";
+import {
+  encrypt as encryptAuto,
+  decrypt as decryptAuto,
+} from "../ciphers/AutoVigenereCipher";
+import {
+  productCipherEncrypt,
+  productCipherDecrypt,
+} from "../ciphers/ProductCipher";
+import ToggleButton from "./ToggleButton";
 
 const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
+  const [isEncrypt, setIsEncrypt] = useState(true);
   const [encryptedContent, setEncryptedContent] = useState("");
+  const [decryptedContent, setDecryptedContent] = useState("");
   const [fileName, setFileName] = useState("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,40 +56,87 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
   const handleEncrypt = (content: string) => {
     if (type === "Playfair") {
       const playfair = new PlayfairCipher(inputKey || "");
-      const encryptedText = playfair.encrypt(content);
-      setEncryptedContent(encryptedText);
+      if (isEncrypt) {
+        const encryptedText = playfair.encrypt(content);
+        setEncryptedContent(encryptedText);
+      } else {
+        const decryptedText = playfair.decrypt(content);
+        setDecryptedContent(decryptedText);
+      }
     } else if (type === "Affine") {
-      const encryptedText = encryptAffine(content, 5, 7);
-      setEncryptedContent(encryptedText);
+      if (isEncrypt) {
+        const encryptedText = encryptAffine(content, 5, 7);
+        setEncryptedContent(encryptedText);
+      } else {
+        const decryptedText = decryptAffine(content, 5, 7);
+        setDecryptedContent(decryptedText);
+      }
     } else if (type === "Vigenere") {
-      const encryptedText = encryptVigenere(content, inputKey);
-      setEncryptedContent(encryptedText);
+      if (isEncrypt) {
+        const encryptedText = encryptVigenere(content, inputKey);
+        setEncryptedContent(encryptedText);
+      } else {
+        const decryptedText = decryptVigenere(content, inputKey);
+        setDecryptedContent(decryptedText);
+      }
     } else if (type === "Extended Vigenere") {
-      const encryptedText = encryptExtended(content, inputKey);
-      setEncryptedContent(encryptedText);
+      if (isEncrypt) {
+        const encryptedText = encryptExtended(content, inputKey);
+        setEncryptedContent(encryptedText);
+      } else {
+        const decryptedText = decryptExtended(content, inputKey);
+        setDecryptedContent(decryptedText);
+      }
     } else if (type === "Auto Vigenere") {
-      const encryptedText = encryptAuto(content, inputKey);
-      setEncryptedContent(encryptedText);
+      if (isEncrypt) {
+        const encryptedText = encryptAuto(content, inputKey);
+        setEncryptedContent(encryptedText);
+      } else {
+        const decryptedText = decryptAuto(content, inputKey);
+        setDecryptedContent(decryptedText);
+      }
     } else {
-      const encryptedText = productCipherEncrypt(content, inputKey, inputKey);
-      setEncryptedContent(encryptedText);
+      if (isEncrypt) {
+        const encryptedText = productCipherEncrypt(content, inputKey, inputKey);
+        setEncryptedContent(encryptedText);
+      } else {
+        const decryptedText = productCipherDecrypt(content, inputKey, inputKey);
+        setDecryptedContent(decryptedText);
+      }
     }
   };
 
   const handleDownload = () => {
-    const blob = new Blob([encryptedContent], { type: "text/plain" });
+    const blob = new Blob([isEncrypt ? encryptedContent : decryptedContent], {
+      type: "text/plain",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "encrypted_file.txt";
+    a.download = isEncrypt ? "encrypted_file.txt" : "decrypted_file.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   };
 
+  const handleToggle = (isEncrypt: boolean) => {
+    setEncryptedContent("");
+    setDecryptedContent("");
+    setFileName("");
+    const input = document.getElementById("inputFile") as HTMLInputElement;
+    input.value = "";
+
+    setIsEncrypt(isEncrypt);
+  };
+
   return (
     <div className="w-full">
-      <h1 className="text-xl font-semibold">Encrypt Your File</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold">
+          {isEncrypt ? "Encrypt" : "Decrypt"} Your File
+        </h1>
+        <ToggleButton isEncrypt={isEncrypt} setIsEncrypt={handleToggle} />
+      </div>
       <input
         type="file"
         onChange={handleFileChange}
@@ -101,7 +166,7 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
         className="bg-purple-700 font-semibold text-white px-4 py-1 rounded-md disabled:bg-gray-300"
         disabled={!fileName}
       >
-        Encrypt File
+        {isEncrypt ? "Encrypt" : "Decrypt"} File
       </button>
     </div>
   );

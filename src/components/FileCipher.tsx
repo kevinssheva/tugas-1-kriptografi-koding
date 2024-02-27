@@ -11,10 +11,8 @@ import { productCipherEncrypt } from "../ciphers/ProductCipher";
 const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
   const [encryptedContent, setEncryptedContent] = useState("");
   const [fileName, setFileName] = useState("");
-  console.log("encryptedContent", encryptedContent);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files);
     const file = event.target.files && event.target.files[0];
 
     if (file) {

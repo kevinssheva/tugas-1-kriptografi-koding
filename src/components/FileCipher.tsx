@@ -37,7 +37,7 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
 
   const handleEncrypt = () => {
     if (type === "Playfair") {
-      const playfair = new PlayfairCipher("JALANGANESHASEPULUH");
+      const playfair = new PlayfairCipher(inputKey || "");
       const encryptedText = playfair.encrypt(fileContent);
       setEncryptedContent(encryptedText);
     } else if (type === "Affine") {

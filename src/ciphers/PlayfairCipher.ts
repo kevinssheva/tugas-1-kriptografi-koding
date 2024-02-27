@@ -66,10 +66,6 @@ class PlayfairCipher {
     plaintext = plaintext.toUpperCase().replace(/J/g, "I").replace(/\s/g, ""); // Replace 'J' with 'I'
     let ciphertext = "";
 
-    // for (let i = 0; i < plaintext.length; i += 2) {
-    //     const digraph = (i + 1 === plaintext.length) ? plaintext[i] + 'X' : plaintext.slice(i, i + 2);
-    //     ciphertext += this.encryptDigraph(digraph);
-    // }
     let i = 0;
     while (i < plaintext.length) {
       let digraph;

@@ -9,9 +9,9 @@ import { encrypt as encryptAuto } from "../ciphers/AutoVigenereCipher";
 import { productCipherEncrypt } from "../ciphers/ProductCipher";
 
 const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
-  const [fileContent, setFileContent] = useState("");
   const [encryptedContent, setEncryptedContent] = useState("");
   const [fileName, setFileName] = useState("");
+  console.log("encryptedContent", encryptedContent);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.files);
@@ -23,7 +23,7 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
 
       reader.onload = (e) => {
         const content = e.target?.result as string;
-        setFileContent(content);
+        handleEncrypt(content);
       };
 
       reader.readAsText(file);
@@ -32,38 +32,35 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
 
   const handleDeleteFile = () => {
     setFileName("");
-    setFileContent("");
+    setEncryptedContent("");
+    const input = document.getElementById("inputFile") as HTMLInputElement;
+    input.value = "";
   };
 
-  const handleEncrypt = () => {
+  const handleEncrypt = (content: string) => {
     if (type === "Playfair") {
       const playfair = new PlayfairCipher(inputKey || "");
-      const encryptedText = playfair.encrypt(fileContent);
+      const encryptedText = playfair.encrypt(content);
       setEncryptedContent(encryptedText);
     } else if (type === "Affine") {
-      const encryptedText = encryptAffine(fileContent, 5, 7);
+      const encryptedText = encryptAffine(content, 5, 7);
       setEncryptedContent(encryptedText);
     } else if (type === "Vigenere") {
-      const encryptedText = encryptVigenere(fileContent, inputKey);
+      const encryptedText = encryptVigenere(content, inputKey);
       setEncryptedContent(encryptedText);
     } else if (type === "Extended Vigenere") {
-      const encryptedText = encryptExtended(fileContent, inputKey);
+      const encryptedText = encryptExtended(content, inputKey);
       setEncryptedContent(encryptedText);
     } else if (type === "Auto Vigenere") {
-      const encryptedText = encryptAuto(fileContent, inputKey);
+      const encryptedText = encryptAuto(content, inputKey);
       setEncryptedContent(encryptedText);
     } else {
-      const encryptedText = productCipherEncrypt(
-        fileContent,
-        inputKey,
-        inputKey
-      );
+      const encryptedText = productCipherEncrypt(content, inputKey, inputKey);
       setEncryptedContent(encryptedText);
     }
   };
 
   const handleDownload = () => {
-    handleEncrypt();
     const blob = new Blob([encryptedContent], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

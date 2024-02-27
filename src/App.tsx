@@ -49,21 +49,23 @@ const Page = () => {
 
   return (
     <div className="w-full h-screen bg-purple-400 flex items-center justify-center">
-      <div className="mr-7 flex w-full max-w-[43rem] justify-start items-start">
+      <div className="mr-7 gap-3 flex w-full max-w-[43rem] justify-start items-start">
         <div className="flex flex-col justify-end gap-2 items-end">
           {cipherType.map((cipher) => (
             <button
               key={cipher}
               onClick={() => setType(cipher)}
-              className={`pr-3 pl-5 py-2 bg-white rounded-l-lg ${
-                type === cipher ? "bg-gray-300" : ""
-              }`}
+              className={`pr-3 pl-5 py-2 rounded-lg ${
+                type === cipher
+                  ? "bg-purple-700 text-white font-semibold"
+                  : "bg-white"
+              } transition`}
             >
               {cipher}
             </button>
           ))}
         </div>
-        <div className="w-full flex-1 bg-white py-5 px-7 rounded-lg rounded-tl-none">
+        <div className="w-full flex-1 bg-white min-h-80 py-5 px-7 rounded-lg">
           <div>
             <h1 className="text-3xl font-semibold mb-3">Plain Text</h1>
             <textarea

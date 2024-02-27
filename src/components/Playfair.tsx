@@ -4,16 +4,12 @@ import ToggleButton from "./ToggleButton";
 
 const Playfair = ({ input, inputKey }: { input: string; inputKey: string }) => {
   const [isEncrypt, setIsEncrypt] = useState(true);
-  const [result, setResult] = useState("");
 
-  const handleEncrypt = () => {
-    const playfair = new PlayfairCipher(inputKey);
-    if (isEncrypt) {
-      setResult(playfair.encrypt(input));
-    } else {
-      setResult(playfair.decrypt(input));
-    }
-  };
+  const playfair = new PlayfairCipher(inputKey || "");
+
+  const result = isEncrypt ? playfair.encrypt(input) : playfair.decrypt(input);
+
+  console.log(result, inputKey, input, isEncrypt);
 
   return (
     <div className="w-full h-full">
@@ -29,14 +25,6 @@ const Playfair = ({ input, inputKey }: { input: string; inputKey: string }) => {
           </p>
           <p className="mt-2">{result}</p>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <button
-          onClick={handleEncrypt}
-          className="px-3 py-1 bg-purple-600 text-white font-semibold rounded-lg"
-        >
-          {isEncrypt ? "Encrypt" : "Decrypt"}
-        </button>
       </div>
     </div>
   );

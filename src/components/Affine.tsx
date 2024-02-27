@@ -84,9 +84,11 @@ const Affine = ({ input }: { input: string }) => {
         </div>
       </div>
       <div className="w-full border-b-2 border-gray-300 my-3"></div>
-      <h2 className="text-xl font-semibold">Result</h2>
-      <div className="w-full min-h-10 bg-zinc-100 rounded-lg p-5">
-        <p>{result}</p>
+      <div className="flex-1">
+        <p className="font-semibold text-gray-500">
+          {isEncrypt ? "Cipher Text" : "Plain Text"}
+        </p>
+        <p className="mt-2">{result}</p>
       </div>
     </div>
   );

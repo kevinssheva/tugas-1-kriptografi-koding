@@ -11,8 +11,7 @@ const encrypt = (text: string, key: string): string => {
   let cipherText = "";
 
   if (!text || !key) return "";
-  const filteredString = filterAlphabet(text).toLowerCase();
-  key = key.toLowerCase();
+  const filteredString = filterAlphabet(text);
 
   for (let i = 0; i < filteredString.length; i++) {
     let p = filteredString[i].charCodeAt(0);
@@ -38,8 +37,7 @@ const decrypt = (text: string, key: string): string => {
   let plainText = "";
 
   if (!text || !key) return "";
-  const filteredString = filterAlphabet(text).toLowerCase();
-  key = key.toLowerCase();
+  const filteredString = filterAlphabet(text);
 
   for (let i = 0; i < filteredString.length; i++) {
     let c = filteredString[i].charCodeAt(0);

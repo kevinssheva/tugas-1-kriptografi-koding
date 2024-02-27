@@ -51,28 +51,14 @@ const decrypt = (text: string, key: string): string => {
   const filteredString = filterAlphabet(text).toLowerCase();
   key = filterAlphabet(key).toLowerCase();
 
-  // jika panjang key kurang dari panjang text, tambahkan text ke key hingga panjang key sama dengan panjang text
-  if (key.length < filteredString.length) {
-    const diff = filteredString.length - key.length;
-    for (let i = 0; i < diff; i++) {
-      key += filteredString[i];
-    }
-  }
-
   for (let i = 0; i < filteredString.length; i++) {
-    let c = filteredString[i].charCodeAt(0);
-    const k = key[i % key.length].charCodeAt(0) - 97;
-    let p;
+    const p = filteredString.charCodeAt(i);
+    const k = key.charCodeAt(i % key.length);
 
-    if (c < 97) {
-      c -= 65;
-      p = mod(c - k, n) + 65;
-    } else {
-      c -= 97;
-      p = mod(c - k, n) + 97;
-    }
+    const decryptedChar = String.fromCharCode(((n + p - k) % n) + 97);
 
-    plainText += String.fromCharCode(p);
+    plainText += decryptedChar;
+    key += decryptedChar;
   }
 
   return plainText;

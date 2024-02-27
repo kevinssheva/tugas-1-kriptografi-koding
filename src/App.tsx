@@ -97,7 +97,7 @@ const Page = () => {
           <CipherComponent />
         </div>
         <div className="w-full bg-white py-5 px-7 rounded-lg">
-          <FileCipher />
+          <FileCipher type={type} inputKey={key}/>
         </div>
       </div>
     </div>

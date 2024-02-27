@@ -2,8 +2,13 @@ import { useState } from "react";
 import PlayfairCipher from "../ciphers/PlayfairCipher";
 import { FaPlus } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
+import { encrypt as encryptAffine } from "../ciphers/AffineCipher";
+import { encrypt as encryptVigenere } from "../ciphers/VigenereCipher";
+import { encrypt as encryptExtended } from "../ciphers/ExtendedVigenereCipher";
+import { encrypt as encryptAuto } from "../ciphers/AutoVigenereCipher";
+import { productCipherEncrypt } from "../ciphers/ProductCipher";
 
-const FileCipher = () => {
+const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
   const [fileContent, setFileContent] = useState("");
   const [encryptedContent, setEncryptedContent] = useState("");
   const [fileName, setFileName] = useState("");
@@ -31,9 +36,30 @@ const FileCipher = () => {
   };
 
   const handleEncrypt = () => {
-    const playfair = new PlayfairCipher("JALANGANESHASEPULUH");
-    const encryptedText = playfair.encrypt(fileContent);
-    setEncryptedContent(encryptedText);
+    if (type === "Playfair") {
+      const playfair = new PlayfairCipher("JALANGANESHASEPULUH");
+      const encryptedText = playfair.encrypt(fileContent);
+      setEncryptedContent(encryptedText);
+    } else if (type === "Affine") {
+      const encryptedText = encryptAffine(fileContent, 5, 7);
+      setEncryptedContent(encryptedText);
+    } else if (type === "Vigenere") {
+      const encryptedText = encryptVigenere(fileContent, inputKey);
+      setEncryptedContent(encryptedText);
+    } else if (type === "Extended Vigenere") {
+      const encryptedText = encryptExtended(fileContent, inputKey);
+      setEncryptedContent(encryptedText);
+    } else if (type === "Auto Vigenere") {
+      const encryptedText = encryptAuto(fileContent, inputKey);
+      setEncryptedContent(encryptedText);
+    } else {
+      const encryptedText = productCipherEncrypt(
+        fileContent,
+        inputKey,
+        inputKey
+      );
+      setEncryptedContent(encryptedText);
+    }
   };
 
   const handleDownload = () => {

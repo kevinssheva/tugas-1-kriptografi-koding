@@ -5,6 +5,7 @@ import Vigenere from "./components/Vigenere";
 import Playfair from "./components/Playfair";
 import ProductVT from "./components/ProductVT";
 import AutoVigenere from "./components/AutoVigenere";
+import FileCipher from "./components/FileCipher";
 
 const Page = () => {
   const [input, setInput] = useState("");
@@ -91,8 +92,13 @@ const Page = () => {
           )}
         </div>
       </div>
-      <div className="w-full max-w-xl bg-white py-5 px-7 rounded-lg">
-        <CipherComponent />
+      <div className="w-full max-w-xl flex flex-col gap-3">
+        <div className="w-full bg-white py-5 px-7 rounded-lg">
+          <CipherComponent />
+        </div>
+        <div className="w-full bg-white py-5 px-7 rounded-lg">
+          <FileCipher />
+        </div>
       </div>
     </div>
   );

@@ -32,9 +32,9 @@ const productCipherDecrypt = (
 // Fungsi untuk mengenkripsi dengan Cipher Transpose berbasis kolom
 const transposeEncrypt = (text: string, key: string) => {
   const columns = [];
-  const keyOrder = getKeyOrder(key); // [3, 2, 1, 4]
-  const numColumns = key.length; // 4
-  const numRows = Math.ceil(text.length / numColumns); // 4
+  const keyOrder = getKeyOrder(key);
+  const numColumns = key.length;
+  const numRows = Math.ceil(text.length / numColumns);
 
   // Membagi teks menjadi kolom sesuai dengan kunci
   for (let i = 0; i < numColumns; i++) {
@@ -87,7 +87,7 @@ const transposeDecrypt = (text: string, key: string) => {
 // Fungsi untuk mendapatkan urutan kolom berdasarkan kunci
 const getKeyOrder = (key: string) => {
   const keyChars = key.split("");
-  return keyChars.map((char) => keyChars.indexOf(char) + 1);
+  return keyChars.map((_,index) => index + 1);
 };
 
 export { productCipherEncrypt, productCipherDecrypt };

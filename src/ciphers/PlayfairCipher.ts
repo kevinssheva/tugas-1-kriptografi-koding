@@ -6,13 +6,12 @@ class PlayfairCipher {
   }
 
   private generateKeyMatrix(key: string): string[][] {
-    // Create a 5x5 matrix and fill it with unique characters from the key
     const matrix: string[][] = Array(5)
       .fill(null)
       .map(() => Array(5).fill(null));
     const keySet = new Set<string>();
 
-    key = key.toUpperCase().replace(/J/g, "").replace(/\s/g, ""); // Replace 'J' with 'I'
+    key = key.toUpperCase().replace(/J/g, "").replace(/\s/g, "");
 
     let row = 0,
       col = 0;
@@ -28,7 +27,7 @@ class PlayfairCipher {
         }
       }
     }
-    
+
     return matrix;
   }
 
@@ -63,7 +62,7 @@ class PlayfairCipher {
   }
 
   public encrypt(plaintext: string): string {
-    plaintext = plaintext.toUpperCase().replace(/J/g, "I").replace(/\s/g, ""); // Replace 'J' with 'I'
+    plaintext = plaintext.toUpperCase().replace(/J/g, "I").replace(/\s/g, "");
     let ciphertext = "";
 
     let i = 0;
@@ -73,7 +72,11 @@ class PlayfairCipher {
         digraph = plaintext[i] + "X";
       } else {
         if (plaintext[i] === plaintext[i + 1]) {
-          digraph = plaintext[i] + "X";
+          if (plaintext[i] === "X") {
+            digraph = plaintext[i] + "Z";
+          } else {
+            digraph = plaintext[i] + "X";
+          }
           i--;
         } else {
           digraph = plaintext.slice(i, i + 2);

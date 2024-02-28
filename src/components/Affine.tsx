@@ -84,11 +84,19 @@ const Affine = ({ input }: { input: string }) => {
         </div>
       </div>
       <div className="w-full border-b-2 border-gray-300 my-3"></div>
-      <div className="flex-1">
+      <div className="flex-1 w-full overflow-y-auto">
         <p className="font-semibold text-gray-500">
           {isEncrypt ? "Cipher Text" : "Plain Text"}
         </p>
         <p className="mt-2">{result}</p>
+        {isEncrypt && (
+          <>
+            <p className="font-semibold text-gray-500 mt-4">
+              Cipher Text (Base64)
+            </p>
+            <p className="mt-2">{btoa(result)}</p>
+          </>
+        )}
       </div>
     </div>
   );

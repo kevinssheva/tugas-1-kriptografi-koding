@@ -17,11 +17,19 @@ const Playfair = ({ input, inputKey }: { input: string; inputKey: string }) => {
       </div>
       <div className="w-full border-b-2 border-gray-300 my-3"></div>
       <div className="w-full gap-10 flex">
-        <div className="flex-1">
+        <div className="flex-1 w-full overflow-auto">
           <p className="font-semibold text-gray-500">
             {isEncrypt ? "Cipher Text" : "Plain Text"}
           </p>
           <p className="mt-2">{result}</p>
+          {isEncrypt && (
+            <>
+              <p className="font-semibold text-gray-500 mt-4">
+                Cipher Text (Base64)
+              </p>
+              <p className="mt-2">{btoa(result)}</p>
+            </>
+          )}
         </div>
       </div>
     </div>

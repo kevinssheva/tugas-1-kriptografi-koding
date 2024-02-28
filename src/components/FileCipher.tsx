@@ -29,21 +29,100 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
   const [encryptedContent, setEncryptedContent] = useState("");
   const [decryptedContent, setDecryptedContent] = useState("");
   const [fileName, setFileName] = useState("");
+  const [fileType, setFileType] = useState("");
+  const [cipheredData, setCipheredData] = useState<Uint8Array>();
+  const [decipheredData, setDecipheredData] = useState<Uint8Array>();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
       setFileName(file.name);
+      setFileType(file.type);
       const reader = new FileReader();
 
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        handleEncrypt(content);
-      };
+      reader.onload =
+        file.type === "text/plain" ? handleTextFile : handleBinaryFile;
 
-      reader.readAsText(file);
+      if (file.type === "text/plain") {
+        reader.readAsText(file);
+      } else {
+        reader.readAsArrayBuffer(file);
+      }
     }
+  };
+
+  const handleTextFile = (e: ProgressEvent<FileReader>) => {
+    const content = e.target?.result as string;
+    handleEncrypt(content);
+  };
+
+  const handleBinaryFile = (e: ProgressEvent<FileReader>) => {
+    const arrayBuffer = e.target?.result as ArrayBuffer;
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    if (isEncrypt) {
+      // Cipher the Uint8Array
+      const cipheredUint8Array = cipherUint8Array(uint8Array);
+
+      // Store the ciphered data for later use
+      setCipheredData(cipheredUint8Array);
+    } else {
+      const decipheredData = decryptUint8Array(uint8Array);
+
+      setDecipheredData(decipheredData);
+    }
+  };
+
+  const handleDownloadButtonClick = () => {
+    downloadCipheredFile(
+      isEncrypt ? (cipheredData as Uint8Array) : (decipheredData as Uint8Array)
+    );
+  };
+
+  function cipherUint8Array(uint8Array: Uint8Array): Uint8Array {
+    const cipheredArray = new Uint8Array(uint8Array.length);
+    console.log(uint8Array);
+    for (let i = 0; i < uint8Array.length; i++) {
+      const k = inputKey[i % inputKey.length].charCodeAt(0);
+      // Replace this with your ciphering function
+      cipheredArray[i] = mod(uint8Array[i] + k, 256);
+    }
+    console.log(cipheredArray);
+    return cipheredArray;
+  }
+  function mod(n: number, m: number) {
+    return ((n % m) + m) % m;
+  }
+
+  function decryptUint8Array(uint8Array: Uint8Array): Uint8Array {
+    const decryptedArray = new Uint8Array(uint8Array.length);
+    for (let i = 0; i < uint8Array.length; i++) {
+      const k = inputKey[i % inputKey.length].charCodeAt(0);
+      // Replace this with your decryption function
+      decryptedArray[i] = mod(uint8Array[i] - k, 256);
+    }
+    console.log(decryptedArray);
+    return decryptedArray;
+  }
+
+  const downloadCipheredFile = (cipheredUint8Array: Uint8Array) => {
+    // Create a new Blob with the ciphered data
+    const cipheredBlob = new Blob([cipheredUint8Array], { type: fileType });
+
+    // Create a download link
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(cipheredBlob);
+    downloadLink.download = "ciphered_file"; // Set your desired file name
+
+    // Append the download link to the document
+    document.body.appendChild(downloadLink);
+
+    // Trigger the download
+    downloadLink.click();
+
+    // Remove the download link from the document
+    document.body.removeChild(downloadLink);
   };
 
   const handleDeleteFile = () => {
@@ -143,7 +222,7 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
         className="hidden"
         id="inputFile"
       />
-      <div className="my-2 flex">
+      <div className="my-2 flex flex-col items-start">
         {fileName ? (
           <div className="px-4 py-1 border-dashed border-2 border-gray-400 rounded-lg flex gap-2 items-center">
             <p>{fileName}</p>
@@ -160,9 +239,18 @@ const FileCipher = ({ type, inputKey }: { type: string; inputKey: string }) => {
             <p>Upload File</p>
           </label>
         )}
+        {type === "Extended Vigenere" ? (
+          <p className="text-sm mt-1 text-gray-500">*Add Binary File</p>
+        ) : (
+          <p className="text-sm mt-1 text-gray-500">*Add Text File</p>
+        )}
       </div>
       <button
-        onClick={handleDownload}
+        onClick={
+          type === "Extended Vigenere"
+            ? handleDownloadButtonClick
+            : handleDownload
+        }
         className="bg-purple-700 font-semibold text-white px-4 py-1 rounded-md disabled:bg-gray-300"
         disabled={!fileName}
       >
